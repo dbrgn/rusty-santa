@@ -19,7 +19,11 @@ fn main() {
     group.exclude_pair("Leonard".into(), "Penny".into());
 
     match group.assign() {
-        Ok(assignments) => println!("{:?}", assignments),
+        Ok(assignments) => {
+            for (from, to) in assignments {
+                println!("{} => {}", from, to);
+            }
+        },
         Err(e) => println!("Error: {:?}", e),
     }
 }

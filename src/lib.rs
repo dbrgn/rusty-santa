@@ -171,6 +171,7 @@ impl Group {
             }
         };
         
+        let mut assignments = vec![];
         for person in people {
             trace!("Drawing recipient for {}", person);
 
@@ -192,9 +193,12 @@ impl Group {
 
             // Clear that person as a receiver from all rows
             matrix.set_col(choice, false);
+
+            // Register assignment
+            assignments.push((person, choice.clone()));
         }
 
-        Ok(vec![])
+        Ok(assignments)
     }
 }
 
@@ -266,5 +270,27 @@ mod tests {
         let keys = vec!["a".into()];
         let matrix = Matrix::new(keys);
         assert_eq!(1, matrix.size());
+    }
+
+    /// Test a simple group assignment.
+    #[test]
+    fn group_simple() {
+        let mut group = Group::new();
+
+        group.add("a".into());
+        group.add("b".into());
+        group.add("c".into());
+
+        let assignments = group.assign().unwrap();
+        assert_eq!(assignments.len(), 3);
+
+        for (from, to) in assignments {
+            match from.as_ref() {
+                "a" => assert!(to == "b" || to == "c"),
+                "b" => assert!(to == "a" || to == "c"),
+                "c" => assert!(to == "a" || to == "b"),
+                _ => panic!(),
+            }
+        }
     }
 }
