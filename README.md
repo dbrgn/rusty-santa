@@ -16,6 +16,77 @@ attempts are made at resolving the name assignments without conflict until the
 algorithm fails.
 
 
+## Usage
+
+```rust
+let mut group = Group::new();
+
+group.add("Sheldon".into());
+group.add("Amy".into());
+group.add("Leonard".into());
+group.add("Penny".into());
+group.add("Rajesh".into());
+group.add("Howard".into());
+group.add("Bernadette".into());
+
+// Exclude couples
+group.exclude_pair("Sheldon".into(), "Amy".into());
+group.exclude_pair("Leonard".into(), "Penny".into());
+group.exclude_pair("Howard".into(), "Bernadette".into());
+
+// Sheldon can't keep secrets from his roommates
+group.exclude("Sheldon".into(), "Leonard".into());
+
+match group.assign() {
+    Ok(assignments) => {
+        for (from, to) in assignments {
+            println!("{} => {}", from, to);
+        }
+    },
+    Err(e) => println!("Error: {:?}", e),
+}
+```
+
+
+## Logging
+
+Rusty Santa logs the algorithm steps on the TRACE level:
+
+```
+$ RUST_LOG=rusty_santa=trace cargo run --example cli
+    Finished dev [unoptimized + debuginfo] target(s) in 0.0 secs
+     Running `target/debug/examples/cli`
+TRACE:rusty_santa: Drawing recipient for Howard
+TRACE:rusty_santa: Options: ["Sheldon", "Penny", "Amy", "Rajesh", "Leonard"]
+TRACE:rusty_santa: Picked Sheldon!
+TRACE:rusty_santa: Drawing recipient for Sheldon
+TRACE:rusty_santa: Options: ["Howard", "Bernadette", "Penny", "Rajesh"]
+TRACE:rusty_santa: Picked Howard!
+TRACE:rusty_santa: Drawing recipient for Bernadette
+TRACE:rusty_santa: Options: ["Penny", "Amy", "Rajesh", "Leonard"]
+TRACE:rusty_santa: Picked Penny!
+TRACE:rusty_santa: Drawing recipient for Penny
+TRACE:rusty_santa: Options: ["Bernadette", "Amy", "Rajesh"]
+TRACE:rusty_santa: Picked Amy!
+TRACE:rusty_santa: Drawing recipient for Amy
+TRACE:rusty_santa: Options: ["Bernadette", "Rajesh", "Leonard"]
+TRACE:rusty_santa: Picked Rajesh!
+TRACE:rusty_santa: Drawing recipient for Rajesh
+TRACE:rusty_santa: Options: ["Bernadette", "Leonard"]
+TRACE:rusty_santa: Picked Leonard!
+TRACE:rusty_santa: Drawing recipient for Leonard
+TRACE:rusty_santa: Options: ["Bernadette"]
+TRACE:rusty_santa: Picked Bernadette!
+Howard => Sheldon
+Sheldon => Howard
+Bernadette => Penny
+Penny => Amy
+Amy => Rajesh
+Rajesh => Leonard
+Leonard => Bernadette
+```
+
+
 ## License
 
 Licensed under either of

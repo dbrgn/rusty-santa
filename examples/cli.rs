@@ -13,10 +13,16 @@ fn main() {
     group.add("Leonard".into());
     group.add("Penny".into());
     group.add("Rajesh".into());
+    group.add("Howard".into());
+    group.add("Bernadette".into());
 
+    // Exclude couples
     group.exclude_pair("Sheldon".into(), "Amy".into());
-    group.exclude_pair("Sheldon".into(), "Leonard".into());
     group.exclude_pair("Leonard".into(), "Penny".into());
+    group.exclude_pair("Howard".into(), "Bernadette".into());
+
+    // Sheldon can't keep secrets from his roommates
+    group.exclude("Sheldon".into(), "Leonard".into());
 
     match group.assign() {
         Ok(assignments) => {
