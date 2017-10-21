@@ -6,8 +6,8 @@ assignments with additional constraints.
 It is possible to add the following constraints to the random assignments:
 
 - Person A and B should not draw each other (e.g. for couples)
-- Person A should not draw person B (e.g. if that person was already the gift
-  recipient the previous year)
+- Person A should not draw person B (e.g. if person B already received a gift
+  from person A the previous year, or if person A dislikes person B)
 
 While this is an interesting mathematical problem and can be solved with
 bipartite graphs and the hungarian algorithm, this library sticks to a simpler
