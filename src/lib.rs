@@ -1,4 +1,3 @@
-extern crate env_logger;
 #[macro_use]
 extern crate log;
 extern crate rand;
@@ -105,7 +104,7 @@ enum Constraint {
 }
 
 #[derive(Debug, Clone)]
-struct Group {
+pub struct Group {
     people_set: HashSet<String>,
     constraints: Vec<Constraint>,
 }
@@ -203,27 +202,6 @@ impl Group {
 pub enum AssignError {
     BadConstraint(String),
 }
-
-fn main() {
-    env_logger::init().unwrap();
-
-    let mut group = Group::new();
-
-    group.add("Sheldon".into());
-    group.add("Amy".into());
-    group.add("Leonard".into());
-    group.add("Penny".into());
-    group.add("Rajesh".into());
-
-    group.exclude_pair("Sheldon".into(), "Amy".into());
-    group.exclude_pair("Leonard".into(), "Penny".into());
-
-    match group.assign() {
-        Ok(assignments) => println!("{:?}", assignments),
-        Err(e) => println!("Error: {:?}", e),
-    }
-}
-
 
 #[cfg(test)]
 mod tests {
