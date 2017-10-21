@@ -2,7 +2,7 @@
 
 ![Logo](logo.png)
 
-A small library for resolving [secret santa](https://en.wikipedia.org/wiki/Secret_Santa)
+A small Rust library for resolving [Secret Santa](https://en.wikipedia.org/wiki/Secret_Santa)
 assignments with additional constraints.
 
 It is possible to add the following constraints to the random assignments:
