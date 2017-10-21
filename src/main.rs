@@ -1,3 +1,6 @@
+extern crate env_logger;
+#[macro_use]
+extern crate log;
 extern crate rand;
 
 use std::collections::{HashMap, HashSet};
@@ -170,7 +173,7 @@ impl Group {
         };
         
         for person in people {
-            println!("Drawing for {}", person);
+            trace!("Drawing recipient for {}", person);
 
             // Get the possible names
             let mut basket = vec![];
@@ -182,16 +185,14 @@ impl Group {
                     }
                 }
             }
-            println!("Options: {:?}", basket);
+            trace!("Options: {:?}", basket);
 
             // Draw a random name
             let choice = rng.choose(&basket).unwrap();
-            println!("Picked {}!", choice);
+            trace!("Picked {}!", choice);
 
             // Clear that person as a receiver from all rows
             matrix.set_col(choice, false);
-
-            println!("---");
         }
 
         Ok(vec![])
@@ -204,7 +205,7 @@ pub enum AssignError {
 }
 
 fn main() {
-    println!("Hello, world!");
+    env_logger::init().unwrap();
 
     let mut group = Group::new();
 
