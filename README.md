@@ -1,5 +1,7 @@
 # Rusty Santa
 
+![Logo](logo.png)
+
 A small library for resolving [secret santa](https://en.wikipedia.org/wiki/Secret_Santa)
 assignments with additional constraints.
 
