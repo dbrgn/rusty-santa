@@ -107,6 +107,10 @@ enum Constraint {
 pub struct Group {
     people_set: HashSet<String>,
     constraints: Vec<Constraint>,
+
+    /// When trying to resolve group assignments, try up to `max_attempts`
+    /// times until giving up.
+    max_attempts: u32,
 }
 
 impl Group {
@@ -114,6 +118,7 @@ impl Group {
         Group {
             people_set: HashSet::new(),
             constraints: vec![],
+            max_attempts: 1000,
         }
     }
 
@@ -143,68 +148,77 @@ impl Group {
         let mut people: Vec<String> = self.people_set.iter().cloned().collect();
         rng.shuffle(&mut people);
 
-        // Initialize the gift possibility matrix
-        let mut matrix = Matrix::new(people.clone());
+        'attempt: for _ in 0..self.max_attempts {
 
-        // Iterate over constraints, apply them to the matrix
-        for constraint in self.constraints.iter() {
-            match constraint {
-                &Constraint::ExcludePair{ ref a, ref b } => {
-                    if !matrix.contains(a) {
-                        return Err(AssignError::BadConstraint(format!("Unknown person \"{}\"", a)));
-                    }
-                    if !matrix.contains(b) {
-                        return Err(AssignError::BadConstraint(format!("Unknown person \"{}\"", b)));
-                    }
-                    matrix.set(a, b, false);
-                    matrix.set(b, a, false);
-                },
-                &Constraint::Exclude { ref from, ref to } => {
-                    if !matrix.contains(from) {
-                        return Err(AssignError::BadConstraint(format!("Unknown person \"{}\"", from)));
-                    }
-                    if !matrix.contains(to) {
-                        return Err(AssignError::BadConstraint(format!("Unknown person \"{}\"", to)));
-                    }
-                    matrix.set(from, to, false);
-                }
-            }
-        };
-        
-        let mut assignments = vec![];
-        for person in people {
-            trace!("Drawing recipient for {}", person);
+            // Initialize the gift possibility matrix
+            let mut matrix = Matrix::new(people.clone());
 
-            // Get the possible names
-            let mut basket = vec![];
-            {
-                let row = matrix.get_row(&person);
-                for i in 0..row.len() {
-                    if row[i] {
-                        basket.push(matrix.key_at(i).to_owned());
+            // Iterate over constraints, apply them to the matrix
+            for constraint in self.constraints.iter() {
+                match constraint {
+                    &Constraint::ExcludePair{ ref a, ref b } => {
+                        if !matrix.contains(a) {
+                            return Err(AssignError::BadConstraint(format!("Unknown person \"{}\"", a)));
+                        }
+                        if !matrix.contains(b) {
+                            return Err(AssignError::BadConstraint(format!("Unknown person \"{}\"", b)));
+                        }
+                        matrix.set(a, b, false);
+                        matrix.set(b, a, false);
+                    },
+                    &Constraint::Exclude { ref from, ref to } => {
+                        if !matrix.contains(from) {
+                            return Err(AssignError::BadConstraint(format!("Unknown person \"{}\"", from)));
+                        }
+                        if !matrix.contains(to) {
+                            return Err(AssignError::BadConstraint(format!("Unknown person \"{}\"", to)));
+                        }
+                        matrix.set(from, to, false);
                     }
                 }
+            };
+
+            let mut assignments = vec![];
+            for person in people.iter() {
+                trace!("Drawing recipient for {}", person);
+
+                // Get the possible names
+                let mut basket = vec![];
+                {
+                    let row = matrix.get_row(&person);
+                    for i in 0..row.len() {
+                        if row[i] {
+                            basket.push(matrix.key_at(i).to_owned());
+                        }
+                    }
+                }
+                trace!("Options: {:?}", basket);
+
+                // Draw a random name
+                if basket.is_empty() {
+                    trace!("Attempt failed. Retrying...");
+                    continue 'attempt;
+                }
+                let choice = rng.choose(&basket).unwrap();
+                trace!("Picked {}!", choice);
+
+                // Clear that person as a receiver from all rows
+                matrix.set_col(choice, false);
+
+                // Register assignment
+                assignments.push((person.clone(), choice.clone()));
             }
-            trace!("Options: {:?}", basket);
 
-            // Draw a random name
-            let choice = rng.choose(&basket).unwrap();
-            trace!("Picked {}!", choice);
-
-            // Clear that person as a receiver from all rows
-            matrix.set_col(choice, false);
-
-            // Register assignment
-            assignments.push((person, choice.clone()));
+            return Ok(assignments);
         }
-
-        Ok(assignments)
+        return Err(AssignError::GivingUp)
     }
 }
 
 #[derive(Debug)]
 pub enum AssignError {
     BadConstraint(String),
+    GivingUp,
 }
 
 #[cfg(test)]
@@ -291,6 +305,26 @@ mod tests {
                 "c" => assert!(to == "a" || to == "b"),
                 _ => panic!(),
             }
+        }
+    }
+
+    /// Test a group constellation that may fail.
+    #[test]
+    fn group_may_fail() {
+        let mut group = Group::new();
+
+        group.add("Sheldon".into());
+        group.add("Amy".into());
+        group.add("Leonard".into());
+        group.add("Penny".into());
+        group.add("Rajesh".into());
+
+        group.exclude_pair("Sheldon".into(), "Amy".into());
+        group.exclude_pair("Sheldon".into(), "Leonard".into());
+        group.exclude_pair("Leonard".into(), "Penny".into());
+
+        for i in 0..1000 {
+            group.assign();
         }
     }
 }
