@@ -1,7 +1,7 @@
 extern crate env_logger;
-extern crate rustysanta;
+extern crate rusty_santa;
 
-use rustysanta::Group;
+use rusty_santa::Group;
 
 fn main() {
     env_logger::init().unwrap();

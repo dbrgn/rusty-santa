@@ -1,5 +1,5 @@
 [package]
-name = "rustysanta"
+name = "rusty-santa"
 version = "0.1.0"
 authors = ["Danilo Bargen <mail@dbrgn.ch>"]
 
