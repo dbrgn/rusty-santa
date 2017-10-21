@@ -1,0 +1,7 @@
+[package]
+name = "rustysanta"
+version = "0.1.0"
+authors = ["Danilo Bargen <mail@dbrgn.ch>"]
+
+[dependencies]
+rand = "0.3"
