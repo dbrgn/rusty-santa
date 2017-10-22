@@ -55,7 +55,7 @@ match group.assign() {
 Rusty Santa logs the algorithm steps on the TRACE level:
 
 ```
-$ RUST_LOG=rusty_santa=trace cargo run --example cli
+$ RUST_LOG=rusty_santa=trace cargo run -p rusty-santa --example cli
     Finished dev [unoptimized + debuginfo] target(s) in 0.0 secs
      Running `target/debug/examples/cli`
 TRACE:rusty_santa: Drawing recipient for Howard

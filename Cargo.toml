@@ -1,11 +1,5 @@
-[package]
-name = "rusty-santa"
-version = "0.1.0"
-authors = ["Danilo Bargen <mail@dbrgn.ch>"]
+[workspace]
+members = ["rusty-santa"]
 
-[dependencies]
-rand = "0.3"
-log = "0.3"
-
-[dev-dependencies]
-env_logger = "0.4"
+[patch.crates-io]
+rusty-santa = { path = "rusty-santa" }
