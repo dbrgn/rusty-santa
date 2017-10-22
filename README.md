@@ -18,7 +18,9 @@ attempts are made at resolving the name assignments without conflict until the
 algorithm fails.
 
 
-## Usage
+## Library
+
+### Usage
 
 ```rust
 let mut group = Group::new();
@@ -50,7 +52,7 @@ match group.assign() {
 ```
 
 
-## Logging
+### Logging
 
 Rusty Santa logs the algorithm steps on the TRACE level:
 
@@ -87,6 +89,51 @@ Amy => Rajesh
 Rajesh => Leonard
 Leonard => Bernadette
 ```
+
+## Command Line Tool
+
+There is a proof-of-concept command-line interface:
+
+    $ cargo run -p rusty-santa-cli
+    Rusty Santa v0.1.0
+
+    Who's in?
+    (List one name per line and press enter, end the list with an empty line.)
+
+    Name: A
+    Name: B
+    Name: C
+    Name: D
+    Name: 
+
+    Alright. Are there any pairs that should not give each other gifts?
+    If you're done, just press enter.
+    Name 1: A
+    Name 2: B
+    OK, excluding the pair A <-> B
+    Someone else?
+    Name 1: 
+
+    And now, are there any pairs where person 1 should not give person 2 a gift?
+    If you're done, just press enter.
+    Name 1: A
+    Name 2: C
+    OK, excluding the pair A -> C
+    Someone else?
+    Name 1: 
+
+    Great! Now we'll draw the names.
+    I'll show a name, first. That person should come to the computer,
+    without other people seeing the screen.
+    Press enter to reveal the name, press enter again to hide it.
+
+    B, are you ready? Press enter to see the name.
+    ******
+
+    A, are you ready? Press enter to see the name.
+    You'll give a gift to D! (Press enter to hide the name)
+
+...and so on.
 
 
 ## License

@@ -140,6 +140,10 @@ impl Group {
         self.add_constraint(constraint);
     }
 
+    pub fn contains_name(&self, name: &str) -> bool {
+        self.people_set.contains(name)
+    }
+
     pub fn assign(&self) -> Result<Vec<(String, String)>, AssignError> {
         // Initialize the random number generator
         let mut rng = thread_rng();

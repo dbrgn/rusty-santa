@@ -1,5 +1,5 @@
 [workspace]
-members = ["rusty-santa"]
+members = ["rusty-santa", "rusty-santa-cli"]
 
 [patch.crates-io]
 rusty-santa = { path = "rusty-santa" }

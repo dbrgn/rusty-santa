@@ -1,16 +1,15 @@
 [package]
-name = "rusty-santa"
+name = "rusty-santa-cli"
 version = "0.1.0"
 authors = ["Danilo Bargen <mail@dbrgn.ch>"]
-documentation = "https://docs.rs/rusty-santa"
+documentation = "https://docs.rs/rusty-santa-cli"
 repository = "https://github.com/dbrgn/rusty-santa"
 license = "MIT OR Apache-2.0"
-description = "Resolve Secret Santa assignments with additional constraints."
+description = "Resolve Secret Santa assignments with additional constraints. Command line interface."
 keywords = ["secret santa", "bipartite graphs", "random", "gifts", "wichteln"]
 
 [dependencies]
-rand = "0.3"
-log = "0.3"
-
-[dev-dependencies]
 env_logger = "0.4"
+colored = "1.5"
+rprompt = "1.0.3"
+rusty-santa = "0.1"
