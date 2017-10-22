@@ -1,3 +1,22 @@
+//! Rusty Santa
+//! 
+//! A small Rust library (and command-line tool) for resolving [Secret
+//! Santa](https://en.wikipedia.org/wiki/Secret_Santa) assignments with additional
+//! constraints.
+//!
+//! It is possible to add the following constraints to the random assignments:
+//!
+//! - Person A and B should not draw each other (e.g. for couples)
+//! - Person A should not draw person B (e.g. if person B already received a gift
+//!   from person A the previous year, or if person A dislikes person B)
+//!
+//! While this is an interesting mathematical problem and can be solved with
+//! bipartite graphs and the hungarian algorithm, this library sticks to a simpler
+//! approach and tries to emulate the real name drawing from a basket. Up to 1000
+//! attempts are made at resolving the name assignments without conflict until the
+//! algorithm fails.
+#![doc(html_logo_url = "https://github.com/dbrgn/rusty-santa/raw/master/logo.png")]
+
 #[macro_use]
 extern crate log;
 extern crate rand;
@@ -103,6 +122,7 @@ enum Constraint {
     },
 }
 
+/// A group of people that wants to draw names.
 #[derive(Debug, Clone)]
 pub struct Group {
     people_set: HashSet<String>,
@@ -114,6 +134,7 @@ pub struct Group {
 }
 
 impl Group {
+    /// Create a new `Group`.
     pub fn new() -> Self {
         Group {
             people_set: HashSet::new(),
@@ -122,6 +143,7 @@ impl Group {
         }
     }
 
+    /// Add a name to the group.
     pub fn add(&mut self, name: String) {
         self.people_set.insert(name);
     }
@@ -130,20 +152,24 @@ impl Group {
         self.constraints.push(constraint);
     }
 
+    /// Make sure that person A does not have to give person B a gift.
     pub fn exclude(&mut self, from: String, to: String) {
         let constraint = Constraint::Exclude { from: from, to: to };
         self.add_constraint(constraint);
     }
 
+    /// Make sure that person A and B don't have to give each other gifts.
     pub fn exclude_pair(&mut self, a: String, b: String) {
         let constraint = Constraint::ExcludePair { a: a, b: b };
         self.add_constraint(constraint);
     }
 
+    /// Return whether the specified name is alread in the group.
     pub fn contains_name(&self, name: &str) -> bool {
         self.people_set.contains(name)
     }
 
+    /// Run the name assignment!
     pub fn assign(&self) -> Result<Vec<(String, String)>, AssignError> {
         // Initialize the random number generator
         let mut rng = thread_rng();
@@ -219,6 +245,7 @@ impl Group {
     }
 }
 
+/// Errors that can happen while assigning names.
 #[derive(Debug)]
 pub enum AssignError {
     BadConstraint(String),
