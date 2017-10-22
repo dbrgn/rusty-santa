@@ -1,4 +1,4 @@
 target/
 **/*.rs.bk
-Cargo.lock
+/rusty-santa/Cargo.lock
 *.swp

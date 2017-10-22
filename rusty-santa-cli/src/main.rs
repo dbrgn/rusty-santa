@@ -86,7 +86,7 @@ fn main() {
             println!("Press enter to reveal the name, press enter again to hide it.\n");
 
             for (from, to) in assignments {
-                rprompt::prompt_reply_stderr(&format!("{}, are you ready? Press enter to see the name.", from));
+                rprompt::prompt_reply_stderr(&format!("{}, are you ready? Press enter to see the name.", from)).unwrap();
                 rprompt::prompt_reply_stderr(&format!("You'll give a gift to {}! (Press enter to hide the name)", to)).unwrap();
                 println!("\x1B[1A\x1B[K******\n");
             }
