@@ -2,6 +2,9 @@
 
 ![Logo](logo.png)
 
+[![Crates.io Version (Library)][crates-io-badge-lib]][crates-io-lib]
+[![Crates.io Version (CLI)][crates-io-badge-cli]][crates-io-cli]
+
 A small Rust library (and command-line tool) for resolving [Secret
 Santa](https://en.wikipedia.org/wiki/Secret_Santa) assignments with additional
 constraints.
@@ -152,3 +155,10 @@ Licensed under either of
 Unless you explicitly state otherwise, any contribution intentionally submitted
 for inclusion in the work by you, as defined in the Apache-2.0 license, shall
 be dual licensed as above, without any additional terms or conditions.
+
+
+<!-- Badges -->
+[crates-io-lib]: https://crates.io/crates/rusty-santa
+[crates-io-badge-lib]: https://img.shields.io/crates/v/rusty-santa.svg?maxAge=3600
+[crates-io-cli]: https://crates.io/crates/rusty-santa
+[crates-io-badge-cli]: https://img.shields.io/crates/v/rusty-santa-cli.svg?maxAge=3600
