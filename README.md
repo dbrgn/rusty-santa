@@ -97,9 +97,9 @@ Leonard => Bernadette
 
 ## Command Line Tool
 
-There is a proof-of-concept command-line interface:
+There is a proof-of-concept command-line interface. You can install it with `cargo install rusty-santa-cli`.
 
-    $ cargo run -p rusty-santa-cli
+    $ rusty-santa-cli
     Rusty Santa v0.1.0
 
     Who's in?
